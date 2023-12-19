@@ -60,9 +60,14 @@ const Form = ({ onAddItems }) => {
   )
 }
 
-const Item = ({ item, onDeleteItems }) => {
+const Item = ({ item, onDeleteItems, onPackItem }) => {
   return (
     <li>
+      <input
+        type="checkbox"
+        checked={item.packed}
+        onChange={() => onPackItem(item.id)}
+      />
       <span
         style={item.packed ? { textDecoration: "line-through" } : {}}
       >
@@ -73,7 +78,11 @@ const Item = ({ item, onDeleteItems }) => {
   )
 }
 
-const PackingList = ({ items, onDeleteItems: handleDeleteItem }) => {
+const PackingList = ({
+  items,
+  onDeleteItems: handleDeleteItem,
+  onPackItem: handlePackItem,
+}) => {
   return (
     <div className="list">
       <ul>
@@ -82,6 +91,7 @@ const PackingList = ({ items, onDeleteItems: handleDeleteItem }) => {
             key={item.id}
             item={item}
             onDeleteItems={handleDeleteItem}
+            onPackItem={handlePackItem}
           />
         ))}
       </ul>
@@ -113,11 +123,23 @@ const App = () => {
     )
   }
 
+  const handlePackItem = (id) => {
+    setItems((currentItems) => {
+      return currentItems.map((item) =>
+        item.id === id ? { ...item, packed: !item.packed } : item,
+      )
+    })
+  }
+
   return (
     <div className="app">
       <Logo />
       <Form onAddItems={handleAddItems} />
-      <PackingList items={items} onDeleteItems={handleDeleteItem} />
+      <PackingList
+        items={items}
+        onDeleteItems={handleDeleteItem}
+        onPackItem={handlePackItem}
+      />
       <Stats />
     </div>
   )
