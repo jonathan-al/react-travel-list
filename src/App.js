@@ -10,7 +10,7 @@ const Logo = () => {
   return <h1>🏝️ Far Away 🧳</h1>
 }
 
-const Form = () => {
+const Form = ({ onAddItems }) => {
   const [description, setDescription] = useState("")
   const [quantity, setQuantity] = useState(1)
 
@@ -26,6 +26,8 @@ const Form = () => {
       id: Date.now(),
     }
     console.log("newItem=", newItem)
+
+    onAddItems(newItem)
 
     setDescription("")
     setQuantity(1)
@@ -58,7 +60,7 @@ const Form = () => {
   )
 }
 
-const Item = ({ item }) => {
+const Item = ({ item, onDeleteItems }) => {
   return (
     <li>
       <span
@@ -66,17 +68,21 @@ const Item = ({ item }) => {
       >
         {item.quantity} {item.description}
       </span>
-      <button>❌</button>
+      <button onClick={() => onDeleteItems(item.id)}>❌</button>
     </li>
   )
 }
 
-const PackingList = () => {
+const PackingList = ({ items, onDeleteItems: handleDeleteItem }) => {
   return (
     <div className="list">
       <ul>
-        {initialItems.map((item) => (
-          <Item key={item.id} item={item} />
+        {items.map((item) => (
+          <Item
+            key={item.id}
+            item={item}
+            onDeleteItems={handleDeleteItem}
+          />
         ))}
       </ul>
     </div>
@@ -95,11 +101,23 @@ const Stats = () => {
 }
 
 const App = () => {
+  const [items, setItems] = useState(initialItems)
+
+  const handleAddItems = (item) => {
+    setItems((currentItems) => [...currentItems, item])
+  }
+
+  const handleDeleteItem = (id) => {
+    setItems((currentItems) =>
+      currentItems.filter((item) => item.id !== id),
+    )
+  }
+
   return (
     <div className="app">
       <Logo />
-      <Form />
-      <PackingList />
+      <Form onAddItems={handleAddItems} />
+      <PackingList items={items} onDeleteItems={handleDeleteItem} />
       <Stats />
     </div>
   )
