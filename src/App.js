@@ -82,6 +82,7 @@ const PackingList = ({
   items,
   onDeleteItems: handleDeleteItem,
   onPackItem: handlePackItem,
+  onClearList,
 }) => {
   const sort = {
     input: (items) => items,
@@ -119,6 +120,7 @@ const PackingList = ({
           <option value="description">Sort by description</option>
           <option value="packed">Sort by packed status</option>
         </select>
+        <button onClick={onClearList}>Clear List</button>
       </div>
     </div>
   )
@@ -170,6 +172,10 @@ const App = () => {
     })
   }
 
+  const handleClearList = () => {
+    setItems([])
+  }
+
   return (
     <div className="app">
       <Logo />
@@ -178,6 +184,7 @@ const App = () => {
         items={items}
         onDeleteItems={handleDeleteItem}
         onPackItem={handlePackItem}
+        onClearList={handleClearList}
       />
       <Stats items={items} />
     </div>
